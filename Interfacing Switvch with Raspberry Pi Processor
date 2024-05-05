@@ -1,0 +1,68 @@
+SWITCH PROGRAM:
+import sys
+sys.path.append('/home/pi/Adafruit-Raspberry-Pi-Python-Codelegacy/Adafruit_CircuitPython_MCP230xx-main') 
+import time
+import board
+import busio
+from digitalio import Direction, Pull
+from adafruit_mcp230xx.mcp23017 import MCP23017
+i2c = busio.I2C(board.SCL, board.SDA)
+mcp = MCP23017(i2c)
+mcp = MCP23017(i2c, address=0x20) 
+PortA = [ ]
+for pin in range(0, 8):
+ PortA.append(mcp.get_pin(pin))
+PortB = [ ]
+for pin in range(8, 16):
+ PortB.append(mcp.get_pin(pin))
+for pin in range(0,8):
+ PortA[pin].value=True
+for pin in range(0,8):
+ PortB[pin].value=False
+PortA[0].direction = Direction.OUTPUT
+PortA[1].direction = Direction.OUTPUT
+PortA[2].direction = Direction.OUTPUT
+PortA[3].direction = Direction.OUTPUT
+PortA[4].direction = Direction.OUTPUT
+PortA[5].direction = Direction.OUTPUT
+PortA[6].direction = Direction.OUTPUT
+PortA[7].direction = Direction.OUTPUT
+PortB[0].direction = Direction.OUTPUT
+#Configuring Switch connected pins as INPUT
+PortB[1].direction = Direction.INPUT # Switch 
+PortB[1].pull = Pull.UP 
+PortB[2].direction = Direction.INPUT #Switch
+PortB[2].pull = Pull.UP 
+try:
+ while True:
+ pinData9 =PortB[1].value
+ pinData10 =PortB[2].value
+ if (pinData10==False): 
+ print("S1 Pressed")
+ PortA[0].value = True
+ PortA[3].value = True 
+ PortA[6].value = True
+ if (pinData9==False):
+ print("S2 Pressed") 
+ PortA[1].value = True
+ PortA[4].value = True 
+ PortA[7].value = True
+ if(pinData10 == True and pinData9==True):
+condition the Pins will be in HIGH or True
+ print("Both Switches are OFF ")
+ PortA[0].value = False
+ PortA[3].value = False 
+ PortA[6].value = False
+ PortA[1].value = False
+ PortA[4].value = False 
+ PortA[7].value = False
+ PortA[2].value = False
+ PortA[5].value = False 
+ PortA[0].value = False
+ 
+ time.sleep(2)
+except KeyboardInterrupt:
+ for pin in range(0,8):
+ PortA[pin].value=False
+ for pin in range(0,8):
+ PortB[pin].value=False

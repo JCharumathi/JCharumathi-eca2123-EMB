@@ -1,0 +1,27 @@
+STEPPER MOTOR PROGRAM:
+#include <LPC17xx.H>
+void delay(unsigned int x);
+main()
+{ 
+ LPC_SC->PCONP |= (1 << 15);
+LPC_GPIO0->FIODIR |= 0x00078000;
+LPC_GPIO2->FIODIR &= ~(1<<10);
+ while(1)
+ {
+ 
+ {
+ LPC_GPIO0->FIODIR = 0x00088000;
+ delay(50000);
+ LPC_GPIO0->FIODIR = 0x00044000;
+ delay(50000);
+ LPC_GPIO0->FIODIR= 0x00022000; 
+ delay(50000);
+ LPC_GPIO0->FIODIR = 0x00011000; 
+ delay(50000); 
+ }
+ }
+}
+void delay(unsigned int x) 
+{
+for(;x>0;x--);
+}

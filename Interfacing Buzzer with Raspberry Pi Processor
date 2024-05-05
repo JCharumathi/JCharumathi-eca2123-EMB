@@ -1,0 +1,35 @@
+BUZZER PROGRAM:
+import sys
+sys.path.append('/home/pi/Adafruit-Raspberry-Pi-Python-Codelegacy/Adafruit_CircuitPython_MCP230xx-main') 
+import time
+import board
+import busio
+from digitalio import Direction, Pull
+from adafruit_mcp230xx.mcp23017 import MCP23017
+i2c = busio.I2C(board.SCL, board.SDA)
+mcp = MCP23017(i2c)
+mcp = MCP23017(i2c, address=0x20) # MCP23017 I2C Address
+PortA = [ ]
+for pin in range(0, 8):
+ PortA.append(mcp.get_pin(pin))
+PortB = [ ]
+for pin in range(8, 16):
+ PortB.append(mcp.get_pin(pin))
+for pin in range(0,8):
+ PortA[pin].value=False
+for pin in range(0,8):
+ PortB[pin].value=False
+PortB[3].direction = Direction.OUTPUT # BUZZER CONNECTED PIN AS OUTPUT
+try:
+ while True:
+ PortB[3].value = True
+ print("BUZZER ON")
+ time.sleep(5) # 1 minute time delay
+ PortB[3].value = False
+ print("BUZZER OFF")
+ time.sleep(2)
+except KeyboardInterrupt: # CLEAR THE PINS press Cntrl+C
+ for pin in range(0,8):
+ PortA[pin].value=False
+ for pin in range(0,8):
+ PortB[pin].value=False
